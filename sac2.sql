@@ -11,84 +11,84 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table "Mensajes"
+-- Table structure for table Mensajes
 --
 
-DROP TABLE IF EXISTS "Mensajes";
+DROP TABLE IF EXISTS Mensajes;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "Mensajes" (
-  "ID" int NOT NULL,
-  "ConversacionID" int DEFAULT NULL,
-  "Mensaje" varchar(60) DEFAULT NULL,
-  "Tipo_Declaracion" varchar(4) DEFAULT NULL,
-  "MensajeAnterior" int DEFAULT NULL,
-  "BasadoRespuesta" int DEFAULT NULL,
-  PRIMARY KEY ("ID"),
-  UNIQUE ("MensajeAnterior","BasadoRespuesta")
+CREATE TABLE Mensajes (
+  ID int NOT NULL,
+  ConversacionID int DEFAULT NULL,
+  Mensaje varchar(60) DEFAULT NULL,
+  Tipo_Declaracion varchar(4) DEFAULT NULL,
+  MensajeAnterior int DEFAULT NULL,
+  BasadoRespuesta int DEFAULT NULL,
+  PRIMARY KEY (ID),
+  UNIQUE (MensajeAnterior,BasadoRespuesta)
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table "Mensajes"
+-- Dumping data for table Mensajes
 --
 
 
 --
--- Table structure for table "Respuestas"
+-- Table structure for table Respuestas
 --
 
-DROP TABLE IF EXISTS "Respuestas";
+DROP TABLE IF EXISTS Respuestas;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "Respuestas" (
-  "ID" int NOT NULL,
-  "MensajeID" int DEFAULT NULL,
-  "Texto" varchar(60) DEFAULT NULL,
-  PRIMARY KEY ("ID")
+CREATE TABLE Respuestas (
+  ID int NOT NULL,
+  MensajeID int DEFAULT NULL,
+  Texto varchar(60) DEFAULT NULL,
+  PRIMARY KEY (ID)
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table "Respuestas"
+-- Dumping data for table Respuestas
 --
 
 
 --
--- Table structure for table "RespuestasHistorial"
+-- Table structure for table RespuestasHistorial
 --
 
-DROP TABLE IF EXISTS "RespuestasHistorial";
+DROP TABLE IF EXISTS RespuestasHistorial;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "RespuestasHistorial" (
-  "ID" int NOT NULL,
-  "RespuestaID" int DEFAULT NULL,
-  "Texto" varchar(80) DEFAULT NULL,
-  PRIMARY KEY ("ID")
+CREATE TABLE RespuestasHistorial (
+  ID int NOT NULL,
+  RespuestaID int DEFAULT NULL,
+  Texto varchar(80) DEFAULT NULL,
+  PRIMARY KEY (ID)
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table "RespuestasHistorial"
+-- Dumping data for table RespuestasHistorial
 --
 
 
 --
--- Table structure for table "conversacion"
+-- Table structure for table conversacion
 --
 
-DROP TABLE IF EXISTS "conversacion";
+DROP TABLE IF EXISTS conversacion;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "conversacion" (
-  "ID" int NOT NULL,
-  PRIMARY KEY ("ID")
+CREATE TABLE conversacion (
+  ID int NOT NULL,
+  PRIMARY KEY (ID)
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table "conversacion"
+-- Dumping data for table conversacion
 --
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
