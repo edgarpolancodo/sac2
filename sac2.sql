@@ -25,7 +25,7 @@ CREATE TABLE "Mensajes" (
   "MensajeAnterior" int DEFAULT NULL,
   "BasadoRespuesta" int DEFAULT NULL,
   PRIMARY KEY ("ID"),
-  UNIQUE "MensajeAnterior" ("MensajeAnterior","BasadoRespuesta")
+  UNIQUE ("MensajeAnterior","BasadoRespuesta")
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 
