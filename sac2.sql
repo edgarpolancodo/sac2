@@ -33,10 +33,6 @@ CREATE TABLE "Mensajes" (
 -- Dumping data for table "Mensajes"
 --
 
-LOCK TABLES "Mensajes" WRITE;
-/*!40000 ALTER TABLE "Mensajes" DISABLE KEYS */;
-/*!40000 ALTER TABLE "Mensajes" ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table "Respuestas"
@@ -57,10 +53,6 @@ CREATE TABLE "Respuestas" (
 -- Dumping data for table "Respuestas"
 --
 
-LOCK TABLES "Respuestas" WRITE;
-/*!40000 ALTER TABLE "Respuestas" DISABLE KEYS */;
-/*!40000 ALTER TABLE "Respuestas" ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table "RespuestasHistorial"
@@ -81,10 +73,6 @@ CREATE TABLE "RespuestasHistorial" (
 -- Dumping data for table "RespuestasHistorial"
 --
 
-LOCK TABLES "RespuestasHistorial" WRITE;
-/*!40000 ALTER TABLE "RespuestasHistorial" DISABLE KEYS */;
-/*!40000 ALTER TABLE "RespuestasHistorial" ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table "conversacion"
@@ -103,10 +91,6 @@ CREATE TABLE "conversacion" (
 -- Dumping data for table "conversacion"
 --
 
-LOCK TABLES "conversacion" WRITE;
-/*!40000 ALTER TABLE "conversacion" DISABLE KEYS */;
-/*!40000 ALTER TABLE "conversacion" ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
