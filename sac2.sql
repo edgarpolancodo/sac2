@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS Mensajes;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE Mensajes (
-  ID int NOT NULL,
+  ID int NOT NULL AUTO_INCREMENT,
   ConversacionID int DEFAULT NULL,
   Mensaje varchar(60) DEFAULT NULL,
   Tipo_Declaracion varchar(4) DEFAULT NULL,
@@ -42,7 +42,7 @@ DROP TABLE IF EXISTS Respuestas;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE Respuestas (
-  ID int NOT NULL,
+  ID int NOT NULL AUTO_INCREMENT,
   MensajeID int DEFAULT NULL,
   Texto varchar(60) DEFAULT NULL,
   PRIMARY KEY (ID)
@@ -62,7 +62,7 @@ DROP TABLE IF EXISTS RespuestasHistorial;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE RespuestasHistorial (
-  ID int NOT NULL,
+  ID int NOT NULL AUTO_INCREMENT,
   RespuestaID int DEFAULT NULL,
   Texto varchar(80) DEFAULT NULL,
   PRIMARY KEY (ID)
@@ -82,7 +82,7 @@ DROP TABLE IF EXISTS conversacion;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE conversacion (
-  ID int NOT NULL,
+  ID int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (ID)
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
