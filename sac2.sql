@@ -13,12 +13,12 @@
 --
 -- Table structure for table Mensajes
 --
-
+CREATE SEQUENCE men_id_seq;
 DROP TABLE IF EXISTS Mensajes;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE Mensajes (
-  ID int NOT NULL AUTO_INCREMENT,
+  ID int DEFAULT NEXTVAL('men_id_seq'),
   ConversacionID int DEFAULT NULL,
   Mensaje varchar(60) DEFAULT NULL,
   Tipo_Declaracion varchar(4) DEFAULT NULL,
@@ -37,12 +37,12 @@ CREATE TABLE Mensajes (
 --
 -- Table structure for table Respuestas
 --
-
+CREATE SEQUENCE resp_id_seq;
 DROP TABLE IF EXISTS Respuestas;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE Respuestas (
-  ID int NOT NULL AUTO_INCREMENT,
+  ID int DEFAULT NEXTVAL('resp_id_seq'),
   MensajeID int DEFAULT NULL,
   Texto varchar(60) DEFAULT NULL,
   PRIMARY KEY (ID)
@@ -57,12 +57,12 @@ CREATE TABLE Respuestas (
 --
 -- Table structure for table RespuestasHistorial
 --
-
+CREATE SEQUENCE resph_id_seq;
 DROP TABLE IF EXISTS RespuestasHistorial;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE RespuestasHistorial (
-  ID int NOT NULL AUTO_INCREMENT,
+  ID int DEFAULT NEXTVAL('resph_id_seq'),
   RespuestaID int DEFAULT NULL,
   Texto varchar(80) DEFAULT NULL,
   PRIMARY KEY (ID)
@@ -77,12 +77,12 @@ CREATE TABLE RespuestasHistorial (
 --
 -- Table structure for table conversacion
 --
-
+CREATE SEQUENCE con_id_seq;
 DROP TABLE IF EXISTS conversacion;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE conversacion (
-  ID int NOT NULL AUTO_INCREMENT,
+  ID int DEFAULT NEXTVAL('con_id_seq'),
   PRIMARY KEY (ID)
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
