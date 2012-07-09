@@ -1,0 +1,16 @@
+<option value=""></option>
+<%
+mensajes.each do |mensaje|
+%>
+<option value="m<%=mensaje[0]%>"><%=mensaje[2]%></option>
+<%
+respuestas.data_seek(0)
+respuestas.each do |respuesta|
+if respuesta[1] == mensaje[0]
+%>
+<option value="r<%=respuesta[0]%>">&nbsp;&nbsp;<%=respuesta[2]%></option>
+<%
+end
+end
+end
+%>

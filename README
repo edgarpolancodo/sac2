@@ -1,0 +1,18 @@
+Sistema Automatizador de Conversaciones
+
+Este sistema consiste en brindar la posibilidad de llevar a cabo conversaciones con actores que no estén sincronizados en el tiempo. Esto mediante declaraciones o  preguntas predeterminadas por parte del emisor, y respuestas o reacciones por parte del receptor.
+
+El emisor crearía un flujo de declaraciones con potenciales respuestas que el receptor daría. El receptor tiene la posibilidad de personalizar su respuesta.
+
+Caracteristicas
+---------------
+1. Crear conversaciones con mensajes y potenciales respuestas. Esto por parte del emisor
+2. Responder mensajes con las potenciales respuestas y personalizar las mismas. Esto por parte del receptor
+3. Visualizar conversación con mensajes y respuestas
+
+
+Requerimientos
+--------------
+
+Sinatra Ruby (http://www.sinatrarb.com/)
+Ruby/MySQL (http://www.tmtm.org/en/ruby/mysql/)

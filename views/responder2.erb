@@ -1,0 +1,16 @@
+<input type="hidden" value="<%=mensaje%>" name="mensaje"/>
+<input type="hidden" value="<%=mensajeid%>" name="mensajeid"/>
+<input type="hidden" value="<%=tipo%>" name="tipo"/>
+<%
+respuestas.each do |respuesta| 
+if tipo == "MS"
+%>
+<input type="checkbox" value="<%=respuesta[0]%>" name="checkbox[]"/><label id="<%=respuesta[0]%>" for="<%=respuesta[0]%>"><%=respuesta[2]%></label>
+<%
+else
+%>
+<button type="button" value="<%=respuesta[0]%>" onclick="seleccionarRespuesta(this)"><%=respuesta[2]%></button>
+<%
+end
+end
+%>
