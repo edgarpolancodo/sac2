@@ -34,8 +34,7 @@ post '/crear/:cid' do
 		respuestaID = params[:origen].split('r').last
 	end
 	#Esta parte ingresa el nuevo mensaje
-	my.exec("insert into Mensajes(ConversacionID, Mensaje, Tipo_Declaracion, MensajeAnterior, BasadoRespuesta) VALUES "+
-	"('#{params[:cid]}', '#{params[:declaracion]}', '#{params[:tipo]}', '#{mensajeID}', '#{respuestaID}');")
+	my.exec("insert into Mensajes(ConversacionID, Mensaje, Tipo_Declaracion, MensajeAnterior, BasadoRespuesta) VALUES ('#{params[:cid]}', '#{params[:declaracion]}', '#{params[:tipo]}', '#{mensajeID}', '#{respuestaID}');")
 
 	my.exec("update Mensajes set MensajeAnterior = NULL, BasadoRespuesta = NULL Where MensajeAnterior=0 AND BasadoRespuesta=0;")
 	res = my.exec("select ID from Mensajes WHERE Mensaje = '#{params[:declaracion]}' AND Tipo_Declaracion = '#{params[:tipo]}' AND ConversacionID = '#{params[:cid]}'")
