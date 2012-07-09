@@ -4,7 +4,7 @@ mensajes.each do |mensaje|
 %>
 <option value="m<%=mensaje[0]%>"><%=mensaje[2]%></option>
 <%
-respuestas.data_seek(0)
+
 respuestas.each do |respuesta|
 if respuesta[1] == mensaje[0]
 %>
