@@ -25,8 +25,8 @@ end
 post '/crear/:cid' do
 	my = PGconn.open("ec2-23-21-144-152.compute-1.amazonaws.com", 5432, '', '',"mjjsaotlzo", "mjjsaotlzo", "U9ZBrHHAQ0gBh6wHmkxd")
 	link = request.url.sub("crear", "responder")
-	mensajeID = "NULL"
-	respuestaID = "NULL"
+	mensajeID = "0"
+	respuestaID = "0"
 	#Esta parte valida si el mensaje es basado en respuesta o continuación de mensaje anterior
 	if params[:origen].include? 'm'
 		mensajeID = params[:origen].split('m').last
