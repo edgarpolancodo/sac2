@@ -18,12 +18,12 @@ DROP TABLE IF EXISTS "Mensajes";
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "Mensajes" (
-  "ID" int(11) NOT NULL,
-  "ConversacionID" int(11) DEFAULT NULL,
+  "ID" int NOT NULL,
+  "ConversacionID" int DEFAULT NULL,
   "Mensaje" varchar(60) DEFAULT NULL,
   "Tipo_Declaracion" varchar(4) DEFAULT NULL,
-  "MensajeAnterior" int(11) DEFAULT NULL,
-  "BasadoRespuesta" int(11) DEFAULT NULL,
+  "MensajeAnterior" int DEFAULT NULL,
+  "BasadoRespuesta" int DEFAULT NULL,
   PRIMARY KEY ("ID"),
   UNIQUE KEY "MensajeAnterior" ("MensajeAnterior","BasadoRespuesta")
 );
@@ -46,8 +46,8 @@ DROP TABLE IF EXISTS "Respuestas";
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "Respuestas" (
-  "ID" int(11) NOT NULL,
-  "MensajeID" int(11) DEFAULT NULL,
+  "ID" int NOT NULL,
+  "MensajeID" int DEFAULT NULL,
   "Texto" varchar(60) DEFAULT NULL,
   PRIMARY KEY ("ID")
 );
@@ -70,8 +70,8 @@ DROP TABLE IF EXISTS "RespuestasHistorial";
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "RespuestasHistorial" (
-  "ID" int(11) NOT NULL,
-  "RespuestaID" int(11) DEFAULT NULL,
+  "ID" int NOT NULL,
+  "RespuestaID" int DEFAULT NULL,
   "Texto" varchar(80) DEFAULT NULL,
   PRIMARY KEY ("ID")
 );
@@ -94,7 +94,7 @@ DROP TABLE IF EXISTS "conversacion";
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "conversacion" (
-  "ID" int(11) NOT NULL,
+  "ID" int NOT NULL,
   PRIMARY KEY ("ID")
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
