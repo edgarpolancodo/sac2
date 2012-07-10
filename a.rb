@@ -4,7 +4,7 @@ require 'pg'
 #Función que crea nueva conversación
 get '/crear/nuevo' do
 	my = PGconn.open("ec2-23-21-144-152.compute-1.amazonaws.com", 5432, '', '',"mjjsaotlzo", "mjjsaotlzo", "U9ZBrHHAQ0gBh6wHmkxd")
-	my.exec("insert into conversacion VALUES();")
+	my.exec("insert into conversacion VALUES((select ID from conversacion ORDER BY ID DESC LIMIT 1)+1);")
 	res = my.exec("select * from conversacion ORDER BY ID DESC LIMIT 1;")
 	res.each do |r|
 		redirect "/crear/#{r[0]}"	
