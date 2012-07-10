@@ -42,14 +42,14 @@ post '/crear/:cid' do
 	if params[:tipo] == "FREE"
 		res.each do |row|
 			my.exec("insert into Respuestas(MensajeID, Texto) VALUES "+
-				"('#{row[0]}', '#{params[:respuestas]}')")
+				"('#{row[0]}', '#{params[:respuestas]}');")
 		end
 	
 	elsif
 		res.each do |row|
 			params[:respuestas].split("\n").each do |respuesta|
 			my.exec("insert into Respuestas(MensajeID, Texto) VALUES "+
-			"('#{row[0]}', '#{respuesta}')")
+			"('#{row[0]}', '#{respuesta}');")
 			end	
 		end
 	end
