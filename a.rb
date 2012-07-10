@@ -47,7 +47,7 @@ post '/crear/:cid' do
 	
 	elsif
 		res.each do |row|
-			params[:respuestas].each do |respuesta|
+			params[:respuestas].split("\n").each do |respuesta|
 			my.exec("insert into Respuestas(MensajeID, Texto) VALUES "+
 			"('#{row[0]}', '#{respuesta}')")
 			end	
