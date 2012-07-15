@@ -7,7 +7,7 @@ get '/crear/nuevo' do
 	my.exec("insert into conversacion VALUES((select ID from conversacion ORDER BY ID DESC LIMIT 1)+1);")
 	res = my.exec("select * from conversacion ORDER BY ID DESC LIMIT 1;")
 	res.each do |r|
-		redirect "/crear/#{r[0]}"	
+		redirect "/crear/#{r[id]}"	
 	end
 end
 
