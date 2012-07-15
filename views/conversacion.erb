@@ -4,8 +4,8 @@
 conversacion.each do |con|
 %>
 
-<label style="color:#000000"><%=con[2]%></label><br />
-<label title="<%=con[8]%>" style="color:#FF0000"><%=con[11]%></label><br />
+<label style="color:#000000"><%=con['mensaje']%></label><br />
+<label title="<%=con['texto']%>" style="color:#FF0000"><%=con['rh_texto']%></label><br />
 
 <%
 end
