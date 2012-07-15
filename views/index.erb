@@ -37,13 +37,13 @@ Tipo de respuestas: <select name="tipo"><option value="abcd">a, b, c o d</option
 <%
 mensajes.each do |mensaje|
 %>
-<option value="m<%=mensaje[0]%>"><%=mensaje[2]%></option>
+<option value="m<%=mensaje['id']%>"><%=mensaje['mensaje']%></option>
 <%
 
 respuestas.each do |respuesta|
-if respuesta[1] == mensaje[0]
+if respuesta['mensajeid'] == mensaje['id']
 %>
-<option value="r<%=respuesta[0]%>">&nbsp;&nbsp;<%=respuesta[2]%></option>
+<option value="r<%=respuesta['id']%>">&nbsp;&nbsp;<%=respuesta['texto']%></option>
 <%
 end
 end
