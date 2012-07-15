@@ -82,11 +82,11 @@ post '/responder' do
 	texto = params[:texto]
 	tipo = params[:tipo]
 	if tipo == "abcd" || tipo=="FREE"
-		my.query("insert into RespuestasHistorial(RespuestaID, Texto) VALUES ('#{respuestaid}', '#{texto}')")	
+		my.exec("insert into RespuestasHistorial(RespuestaID, Texto) VALUES ('#{respuestaid}', '#{texto}')")	
 	elsif tipo == "MS" 
 		fila = 0
 		respuestaid.each do |r|
-			my.query("insert into RespuestasHistorial(RespuestaID, Texto) VALUES ('#{r}', '#{texto[fila]}')")
+			my.exec("insert into RespuestasHistorial(RespuestaID, Texto) VALUES ('#{r}', '#{texto[fila]}')")
 			fila+=1
 		end
 	end
