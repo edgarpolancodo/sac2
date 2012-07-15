@@ -67,9 +67,9 @@ get '/responder/:cid' do
 	mensaje = ""
 	tipo = ""	
 	men.each do |m|
-		mensaje = m[2]
-		mensajeid = m[0]
-		tipo = m[3]	
+		mensaje = m['mensaje']
+		mensajeid = m['id']
+		tipo = m['tipo_declaracion']	
 	end
 	res = my.exec("select * from Respuestas where MensajeID = '#{mensajeid}';")
 	erb :responder, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => res, :tipo => tipo}
@@ -102,9 +102,9 @@ post '/responder' do
 	mensaje = ""	
 	tipo = ""
 	men.each do |m|
-		mensaje = m[2]
-		mensajeid = m[0]
-		tipo = m[3]	
+		mensaje = m['mensaje']
+		mensajeid = m['id']
+		tipo = m['tipo_declaracion']	
 	end
 	res = my.exec("select * from Respuestas where MensajeID = '#{mensajeid}';")
 	erb :responder2, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => res, :tipo => tipo}

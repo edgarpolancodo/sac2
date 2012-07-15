@@ -72,11 +72,11 @@ xmlhttp.onreadystatechange=function(){
 respuestas.each do |respuesta| 
 if tipo == "MS"
 %>
-<input type="checkbox" value="<%=respuesta[0]%>" name="checkbox[]"/><label id="<%=respuesta[0]%>" for="<%=respuesta[0]%>"><%=respuesta[2]%></label>
+<input type="checkbox" value="<%=respuesta['id']%>" name="checkbox[]"/><label id="<%=respuesta['id']%>" for="<%=respuesta['id']%>"><%=respuesta['texto']%></label>
 <%
 else
 %>
-<button type="button" value="<%=respuesta[0]%>" onclick="seleccionarRespuesta(this)"><%=respuesta[2]%></button>
+<button type="button" value="<%=respuesta['id']%>" onclick="seleccionarRespuesta(this)"><%=respuesta['texto']%></button>
 <%
 end
 end
