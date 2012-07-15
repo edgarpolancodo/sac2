@@ -15,7 +15,7 @@ end
 get '/crear/:cid' do
 	my = PGconn.open("ec2-23-21-144-152.compute-1.amazonaws.com", 5432, '', '',"mjjsaotlzo", "mjjsaotlzo", "U9ZBrHHAQ0gBh6wHmkxd")
 	res = my.exec("select * from Mensajes WHERE ConversacionID = '#{params[:cid]}'")
-	res2 = my.exec("select * from Respuestas r, Mensajes m WHERE ConversacionID = '#{params[:cid]}' AND r.MensajeID = m.ID AND m.Tipo_Declaracion = 'abcd'")
+	res2 = my.exec("select r.ID as id, r.MensajeID as mensajeid, r.Texto as texto from Respuestas r, Mensajes m WHERE ConversacionID = '#{params[:cid]}' AND r.MensajeID = m.ID AND m.Tipo_Declaracion = 'abcd';")
 	link = request.url.sub("crear", "responder")	
 	erb :index, :locals => {:mensajes => res, :respuestas => res2, :cid => params[:cid], :link => link}
 	
@@ -55,7 +55,7 @@ post '/crear/:cid' do
 	end
 	#Esta parte genera la presentación
 	res = my.exec("select * from Mensajes WHERE ConversacionID = '#{params[:cid]}'")
-	res2 = my.exec("select * from Respuestas r, Mensajes m WHERE ConversacionID = '#{params[:cid]}' AND r.MensajeID = m.ID AND m.Tipo_Declaracion = 'abcd';")
+	res2 = my.exec("select r.ID as id, r.MensajeID as mensajeid, r.Texto as texto from Respuestas r, Mensajes m WHERE ConversacionID = '#{params[:cid]}' AND r.MensajeID = m.ID AND m.Tipo_Declaracion = 'abcd';")
 	erb :index2, :locals => {:mensajes => res, :respuestas => res2, :link => link}
 	
 end
