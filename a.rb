@@ -92,7 +92,7 @@ post '/responder' do
 	end
 	if tipo != "MS"
 	men = my.exec("select * from Mensajes where BasadoRespuesta = '#{respuestaid}';")
-		if men.num_rows() == 0
+		if men.ntuples == 0
 			men = my.exec("select * from Mensajes where MensajeAnterior = '#{params[:mensajeid]}';")
 		end
 	else
