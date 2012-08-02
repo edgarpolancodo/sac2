@@ -3,7 +3,7 @@ require 'mysql'
 require 'pg'
 #Función que crea nueva conversación
 get '/crear/nuevo' do
-	my = PGconn.open("ec2-23-21-144-152.compute-1.amazonaws.com", 5432, '', '',"mjjsaotlzo", "mjjsaotlzo", "U9ZBrHHAQ0gBh6wHmkxd")
+	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
 	my.exec("insert into conversacion VALUES((select ID from conversacion ORDER BY ID DESC LIMIT 1)+1);")
 	res = my.exec("select * from conversacion ORDER BY ID DESC LIMIT 1;")
 	res.each do |r|
@@ -13,7 +13,7 @@ end
 
 #Función que crea la presentación de la conversación a trabajarse
 get '/crear/:cid' do
-	my = PGconn.open("ec2-23-21-144-152.compute-1.amazonaws.com", 5432, '', '',"mjjsaotlzo", "mjjsaotlzo", "U9ZBrHHAQ0gBh6wHmkxd")
+	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
 	res = my.exec("select * from Mensajes WHERE ConversacionID = '#{params[:cid]}'")
 	res2 = my.exec("select r.ID as id, r.MensajeID as mensajeid, r.Texto as texto from Respuestas r, Mensajes m WHERE ConversacionID = '#{params[:cid]}' AND r.MensajeID = m.ID AND m.Tipo_Declaracion = 'abcd';")
 	link = request.url.sub("crear", "responder")	
@@ -23,7 +23,7 @@ end
 
 #Función que toma los mensajes y respectivas respuesta de una conversación
 post '/crear/:cid' do
-	my = PGconn.open("ec2-23-21-144-152.compute-1.amazonaws.com", 5432, '', '',"mjjsaotlzo", "mjjsaotlzo", "U9ZBrHHAQ0gBh6wHmkxd")
+	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
 	link = request.url.sub("crear", "responder")
 	mensajeID = "0"
 	respuestaID = "0"
@@ -61,7 +61,7 @@ post '/crear/:cid' do
 end
 #Función que genera la presentación para responder una conversación
 get '/responder/:cid' do
-	my = PGconn.open("ec2-23-21-144-152.compute-1.amazonaws.com", 5432, '', '',"mjjsaotlzo", "mjjsaotlzo", "U9ZBrHHAQ0gBh6wHmkxd")
+	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
 	men = my.exec("select * from Mensajes where ConversacionID = '#{params[:cid]}' ORDER BY ID ASC LIMIT 1;")
 	mensajeid = ""
 	mensaje = ""
@@ -77,7 +77,7 @@ end
 
 #Esta función toma las respuestas y luego muestra el siguiente mensaje
 post '/responder' do
-	my = PGconn.open("ec2-23-21-144-152.compute-1.amazonaws.com", 5432, '', '',"mjjsaotlzo", "mjjsaotlzo", "U9ZBrHHAQ0gBh6wHmkxd")
+	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
 	respuestaid = params[:respuesta]
 	texto = params[:texto]
 	tipo = params[:tipo]
@@ -113,7 +113,7 @@ end
 
 #Esta función muestra en lectura la conversación ya respondida
 get '/leer/:cid' do
-	my = PGconn.open("ec2-23-21-144-152.compute-1.amazonaws.com", 5432, '', '',"mjjsaotlzo", "mjjsaotlzo", "U9ZBrHHAQ0gBh6wHmkxd")
+	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
 	con = my.exec("select m.Mensaje as mensaje, r.Texto as texto, rh.Texto as rh_texto from Mensajes m, Respuestas r, RespuestasHistorial rh where m.ConversacionID = '#{params[:cid]}' and r.MensajeID = m.ID and rh.RespuestaID = r.ID ORDER BY m.ID ASC;")
 	erb :conversacion, :locals => {:conversacion => con}	
 end
