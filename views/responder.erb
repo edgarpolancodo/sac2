@@ -27,13 +27,13 @@ function responder(){
 	var conversacion=document.getElementById("conversacion");	
 	if(tipo.value != "MS"){
 		xmlhttp.send("texto="+texto.value+"&respuesta="+respuestaseleccionada+"&mensajeid="+document.getElementsByName("mensajeid")[0].value+"&tipo="+tipo.value);
-		conversacion.innerHTML+="<br/><label id='receptor'>"+texto.value+"</label>";
+		conversacion.innerHTML+="<p><label id='receptor'>"+texto.value+"</label></p>";
 		document.getElementsByTagName("textarea")[0].disabled = true;
 		document.getElementsByTagName("textarea")[0].value = "";
 	}else{
 		var cajas = document.getElementsByName("checkbox[]");
 		var cadena = "";
-		var cadena2 = "<br/><label id='receptor'>";
+		var cadena2 = "<p><label id='receptor'>";
 		for(var i=0; i<cajas.length; i++){
 			if(cajas[i].checked){
 			cadena += "respuesta[]="+cajas[i].value+"&texto[]="+document.getElementById(cajas[i].value).innerHTML+"&";
@@ -41,7 +41,7 @@ function responder(){
 			}
 		}
 		xmlhttp.send(cadena+"mensajeid="+document.getElementsByName("mensajeid")[0].value+"&tipo="+tipo.value);
-		conversacion.innerHTML+=cadena2+"</label>";
+		conversacion.innerHTML+=cadena2+"</label></p>";
 		
 	}
 	
@@ -71,7 +71,7 @@ xmlhttp.onreadystatechange=function(){
 </div>
 <div id="conversacion" style="background-color: #ECECEC; width: 30%; height: 60%">
 
-<label id='emisor'><%=mensaje%></label>
+<p><label id='emisor'><%=mensaje%></label></p>
 
 </div>
 <form name="respuestas" method="post" action="/responder" onsubmit="return responder()">
