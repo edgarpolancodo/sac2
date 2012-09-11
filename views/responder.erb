@@ -17,6 +17,7 @@ function seleccionarRespuesta(e){
 	e.disabled = true;
 	document.getElementsByTagName("textarea")[0].disabled = false;
 	document.getElementsByTagName("textarea")[0].focus();
+	document.getElementById("Continuar").disabled = false;
 }
 xmlhttp=new XMLHttpRequest();
 function responder(){
@@ -30,6 +31,7 @@ function responder(){
 		conversacion.innerHTML+="<p><label id='receptor'>"+texto.value+"</label></p>";
 		document.getElementsByTagName("textarea")[0].disabled = true;
 		document.getElementsByTagName("textarea")[0].value = "";
+		document.getElementById("Continuar").disabled = true;
 	}else{
 		var cajas = document.getElementsByName("checkbox[]");
 		var cadena = "";
@@ -78,25 +80,34 @@ xmlhttp.onreadystatechange=function(){
 <label id="contenidoactualizado">
 <input type="hidden" value="<%=mensajeid%>" name="mensajeid"/>
 <input type="hidden" value="<%=tipo%>" name="tipo"/>
+<%
+if respuestas != ""
+%>
 <div class="input-append">
 <%
-respuestas.each do |respuesta| 
-if tipo == "MS"
-%>
+	respuestas.each do |respuesta| 
+		if tipo == "MS"
+	%>
 <input type="checkbox" value="<%=respuesta['id']%>" name="checkbox[]"/><label id="<%=respuesta['id']%>" for="<%=respuesta['id']%>"><%=respuesta['texto']%></label>
 <%
-else
+		else
 %>
 <button type="button" value="<%=respuesta['id']%>" onclick="seleccionarRespuesta(this)" class="btn btn-primary"><%=respuesta['texto']%></button>
 <%
-end
+		end
+	end
+else
+%>
+<div>
+<p class="text-success">Conversacion terminada.</p>
+<%
 end
 %>
 </div>
 </label>
 <br />
 <textarea name="texto" disabled="true"></textarea>
-<input type="submit" value="Continuar" class="btn btn-mini"/>
+<input type="submit" value="Continuar" class="btn btn-mini" id="Continuar" disabled="true"/>
 </form>
 </body>
 </html>

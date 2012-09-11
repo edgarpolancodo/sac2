@@ -1,17 +1,26 @@
 <input type="hidden" value="<%=mensaje%>" name="mensaje"/>
 <input type="hidden" value="<%=mensajeid%>" name="mensajeid"/>
 <input type="hidden" value="<%=tipo%>" name="tipo"/>
+<%
+if respuestas != ""
+%>
 <div class="input-append">
 <%
-respuestas.each do |respuesta| 
-if tipo == "MS"
-%>
-<input type="checkbox" value="<%=respuesta['id']%>" name="checkbox[]"/><label id="<%=respuesta['id']%>" for="<%=respuesta['id']%>"><%=respuesta['texto']%></label>
-<%
+	respuestas.each do |respuesta| 
+		if tipo == "MS"
+	%>
+	<input type="checkbox" value="<%=respuesta['id']%>" name="checkbox[]"/><label id="<%=respuesta['id']%>" for="<%=respuesta['id']%>"><%=respuesta['texto']%></label>
+	<%
+		else
+	%>
+	<button type="button" value="<%=respuesta['id']%>" onclick="seleccionarRespuesta(this)" class="btn btn-primary"><%=respuesta['texto']%></button>
+	<%
+		end
+	end
 else
 %>
-<button type="button" value="<%=respuesta['id']%>" onclick="seleccionarRespuesta(this)" class="btn btn-primary"><%=respuesta['texto']%></button>
+<div>
+<p class="text-success">Conversacion terminada.</p>
 <%
-end
 end
 %>

@@ -108,9 +108,12 @@ post '/responder' do
 		mensajeid = m['id']
 		tipo = m['tipo_declaracion']	
 	end
-	res = my.exec("select * from Respuestas where MensajeID = '#{mensajeid}';")
-	erb :responder2, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => res, :tipo => tipo}
-
+	if mensaje != ""
+		res = my.exec("select * from Respuestas where MensajeID = '#{mensajeid}';")
+		erb :responder2, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => res, :tipo => tipo}
+	else
+		erb :responder2, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => "", :tipo => tipo}	
+	end
 end
 
 #Esta función muestra en lectura la conversación ya respondida
