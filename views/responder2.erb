@@ -1,6 +1,7 @@
 <input type="hidden" value="<%=mensaje%>" name="mensaje"/>
 <input type="hidden" value="<%=mensajeid%>" name="mensajeid"/>
 <input type="hidden" value="<%=tipo%>" name="tipo"/>
+<div class="input-append">
 <%
 respuestas.each do |respuesta| 
 if tipo == "MS"
@@ -9,7 +10,6 @@ if tipo == "MS"
 <%
 else
 %>
-<div class="input-append">
 <button type="button" value="<%=respuesta['id']%>" onclick="seleccionarRespuesta(this)" class="btn btn-primary"><%=respuesta['texto']%></button>
 <%
 end
