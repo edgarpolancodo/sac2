@@ -1,6 +1,8 @@
+<!DOCTYPE html>
 <html>
 <head>
 <title>Conversacion - <%=cid%></title>
+<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.css" />
 </head>
 <script type="text/javascript">
 xmlhttp=new XMLHttpRequest();
@@ -18,22 +20,53 @@ function enviarMensaje(){
 xmlhttp.onreadystatechange=function(){
 	if(xmlhttp.readyState==4 && xmlhttp.status==200){
 		document.getElementById("estado").innerHTML="Mensaje Agregado exitosamente";
+		document.getElementById("estado").class="text-success";		
 		document.getElementsByName("origen")[0].innerHTML=xmlhttp.responseText;
 		document.getElementsByName("declaracion")[0].value="";
 		document.getElementsByName("respuestas")[0].value="";
 	}else if(xmlhttp.readyState==4 && xmlhttp.status!=200){
+		document.getElementById("estado").class="text-error";		
 		document.getElementById("estado").innerHTML="Intente de nuevo que ha ocurrido un error "+xmlhttp.status;
 	}
+}
+function ayudante(id){
+var ayudante = document.getElementById("ayudante");
+	switch(id){
+		case '1':
+			ayudante.innerHTML = "<strong>Mensaje </strong>Texto que vera el usuario receptor.";
+		break;
+		case '2':
+			ayudante.innerHTML = "<strong>Tipo de mensaje </strong><ul><li>a, b, c o d para solo seleccionar una respuesta</li><li>Respuesta libre permite responder lo que sea</li><li>Seleccion multiple permite responder con mas de un elemento</li><ul>";
+		break;
+		case '3':
+			ayudante.innerHTML = "<strong>Potenciales respuestas </strong>Digitar los diferentes textos por linea como respuestas";
+		break;
+		case '4':
+			ayudante.innerHTML = "<strong>Mensaje Basado </strong>En esta se especifica a partir de cual respuesta o mensaje anterior se mostraria el mensaje actual";
+		break;
+	}
+ayudante.style.display="block";
 }
 
 </script>
 <body>
+<div class="navbar">
+ <div class="navbar-inner">
+<label class="brand">Sistema automatizador de conversaciones</label>
+ <ul class="nav">
+<li class="active"><a>Conversación - <%=cid%></a></li>
+</div>
+</div>
+<div class="row">
+<div class="span5">
 <form action="/crear/<%=cid%>" name="pregunta" method="post" onsubmit="return enviarMensaje()">
-<input type="textbox" name="declaracion" placeholder="Digitar mensaje..." size="50"/><br/>
-Tipo de respuestas: <select name="tipo"><option value="abcd">a, b, c o d</option><option value="FREE">Respuesta libre</option><option value="MS">Seleccion Multiple</option></select></br>
-<textarea name="respuestas" placeholder="Digitar potenciales respuestas por linea..." cols="50"></textarea><br/>
-<select name="origen">
-<option value=""></option>
+<div id="row"><input type="text" name="declaracion" placeholder="Digitar mensaje..." size="50" onfocus="ayudante('1')"/></div>
+<div id="row">
+<div id="span1">Tipo de respuestas: </div><div id="span2"><select name="tipo" onfocus="ayudante('2')"><option value="abcd">a, b, c o d</option><option value="FREE">Respuesta libre</option><option value="MS">Seleccion Multiple</option></select></div>
+</div>
+<textarea name="respuestas" placeholder="Digitar potenciales respuestas por linea..." cols="50" onfocus="ayudante('3')"></textarea><br/>
+<select name="origen" onfocus="ayudante('4')">
+<option value="">Basado en mensaje/respuesta</option>
 <%
 mensajes.each do |mensaje|
 %>
@@ -49,11 +82,18 @@ end
 end
 end
 %>
-</select><br/>
-<input type="submit" value="Guardar declaracion" /><input type="reset" value="Cancelar" /><br/>
-<p><label id="estado"></label></p>
+</select>
+<div class="input-append">
+<input type="submit" value="Guardar declaracion" class="btn btn-primary btn-mini"/><input type="reset" value="Cancelar" class="btn btn-mini"/><br/>
+</div>
+<p class="text-success"><label id="estado"></label></p>
+</form>
+</div>
+<div class="span6 alert alert-info" id="ayudante" style="display:none"></div>
+</div>
+<div class="row">
 Cuando termine de construir la conversacion, copie el siguiente link y envie al receptor:<br/>
 <input type="text" value="<%=link%>" readonly size="50"/>
-</form>
+</div>
 </body>
 </html>

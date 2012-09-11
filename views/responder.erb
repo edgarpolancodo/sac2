@@ -5,6 +5,7 @@
 	color: #0000FF;
 }
 </style>
+<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.css" />
 <title>Respondiendo conversacion</title>
 <script type="text/javascript">
 var respuestaseleccionada = "";
@@ -61,8 +62,17 @@ xmlhttp.onreadystatechange=function(){
 </script>
 </head>
 <body>
+<div class="navbar">
+ <div class="navbar-inner">
+<label class="brand">Sistema automatizador de conversaciones</label>
+ <ul class="nav">
+<li class="active"><a>Respondiendo Conversación</a></li>
+</div>
+</div>
 <div id="conversacion" style="background-color: #ECECEC; width: 30%; height: 60%">
+
 <label id='emisor'><%=mensaje%></label>
+
 </div>
 <form name="respuestas" method="post" action="/responder" onsubmit="return responder()">
 <label id="contenidoactualizado">
@@ -76,15 +86,17 @@ if tipo == "MS"
 <%
 else
 %>
-<button type="button" value="<%=respuesta['id']%>" onclick="seleccionarRespuesta(this)"><%=respuesta['texto']%></button>
+<div class="input-append">
+<button type="button" value="<%=respuesta['id']%>" onclick="seleccionarRespuesta(this)" class="btn btn-primary"><%=respuesta['texto']%></button>
 <%
 end
 end
 %>
+</div>
 </label>
 <br />
 <textarea name="texto" disabled="true"></textarea>
-<input type="submit" value="Continuar" />
+<input type="submit" value="Continuar" class="btn btn-mini"/>
 </form>
 </body>
 </html>

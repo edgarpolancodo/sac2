@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'mysql'
 require 'pg'
+
 #Función que crea nueva conversación
 get '/crear/nuevo' do
 	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
@@ -13,6 +14,7 @@ end
 
 #Función que crea la presentación de la conversación a trabajarse
 get '/crear/:cid' do
+	
 	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
 	res = my.exec("select * from Mensajes WHERE ConversacionID = '#{params[:cid]}'")
 	res2 = my.exec("select r.ID as id, r.MensajeID as mensajeid, r.Texto as texto from Respuestas r, Mensajes m WHERE ConversacionID = '#{params[:cid]}' AND r.MensajeID = m.ID AND m.Tipo_Declaracion = 'abcd';")
@@ -117,3 +119,4 @@ get '/leer/:cid' do
 	con = my.exec("select m.Mensaje as mensaje, r.Texto as texto, rh.Texto as rh_texto from Mensajes m, Respuestas r, RespuestasHistorial rh where m.ConversacionID = '#{params[:cid]}' and r.MensajeID = m.ID and rh.RespuestaID = r.ID ORDER BY m.ID ASC;")
 	erb :conversacion, :locals => {:conversacion => con}	
 end
+

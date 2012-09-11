@@ -9,7 +9,8 @@ if tipo == "MS"
 <%
 else
 %>
-<button type="button" value="<%=respuesta['id']%>" onclick="seleccionarRespuesta(this)"><%=respuesta['texto']%></button>
+<div class="input-append">
+<button type="button" value="<%=respuesta['id']%>" onclick="seleccionarRespuesta(this)" class="btn btn-primary"><%=respuesta['texto']%></button>
 <%
 end
 end
