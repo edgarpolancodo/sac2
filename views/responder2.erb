@@ -9,7 +9,7 @@ if respuestas != ""
 	respuestas.each do |respuesta| 
 		if tipo == "MS"
 	%>
-	<input type="checkbox" value="<%=respuesta['id']%>" name="checkbox[]"/><label id="<%=respuesta['id']%>" for="<%=respuesta['id']%>"><%=respuesta['texto']%></label>
+	<input type="checkbox" value="<%=respuesta['id']%>" name="checkbox[]" onchange="activarContinuar()"/><label id="<%=respuesta['id']%>" for="<%=respuesta['id']%>"><%=respuesta['texto']%></label>
 	<%
 		else
 	%>

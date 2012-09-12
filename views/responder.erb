@@ -54,13 +54,26 @@ xmlhttp.onreadystatechange=function(){
 	if(xmlhttp.readyState==4 && xmlhttp.status==200){
 		document.getElementById("contenidoactualizado").innerHTML = xmlhttp.responseText;
 		var conversacion=document.getElementById("conversacion");
-		conversacion.innerHTML+="<br/><label id='emisor'>"+document.getElementsByName("mensaje")[0].value+"</label>";
+		conversacion.innerHTML+="<p><label id='emisor'>"+document.getElementsByName("mensaje")[0].value+"</label></p>";
 	
 	}else if(xmlhttp.readyState==4 && xmlhttp.status!=200){
 		alert("Intente de nuevo que ha ocurrido un error "+xmlhttp.status);
 	}
 }
 
+function activarContinuar(){
+var activo = false;	
+	for(var i = 0; i < document.getElementsByName("checkbox[]").length; i++){
+		if(document.getElementsByName("checkbox[]")[i].checked){
+		activo=true;
+		}
+	}
+	if(activo){
+		document.getElementById("Continuar").disabled = false;
+	}else{
+		document.getElementById("Continuar").disabled = true;
+	}
+}
 </script>
 </head>
 <body>
@@ -88,7 +101,7 @@ if respuestas != ""
 	respuestas.each do |respuesta| 
 		if tipo == "MS"
 	%>
-<input type="checkbox" value="<%=respuesta['id']%>" name="checkbox[]"/><label id="<%=respuesta['id']%>" for="<%=respuesta['id']%>"><%=respuesta['texto']%></label>
+<input type="checkbox" value="<%=respuesta['id']%>" name="checkbox[]" onchange="activarContinuar()"/><label id="<%=respuesta['id']%>" for="<%=respuesta['id']%>"><%=respuesta['texto']%></label>
 <%
 		else
 %>
