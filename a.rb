@@ -5,7 +5,7 @@ require 'pg'
 #Función que crea nueva conversación
 get '/crear/nuevo' do
 	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
-	my.exec("insert into conversacion VALUES((select ID from conversacion ORDER BY ID DESC LIMIT 1)+1);")
+	my.exec("insert into conversacion(ID) VALUES((select ID from conversacion ORDER BY ID DESC LIMIT 1)+1);")
 	res = my.exec("select * from conversacion ORDER BY ID DESC LIMIT 1;")
 	res.each do |r|
 		redirect "/crear/#{r['id']}"	
@@ -29,30 +29,38 @@ post '/crear/:cid' do
 	link = request.url.sub("crear", "responder")
 	mensajeID = "0"
 	respuestaID = "0"
-	#Esta parte valida si el mensaje es basado en respuesta o continuación de mensaje anterior
-	if params[:origen].include? 'm'
-		mensajeID = params[:origen].split('m').last
-	elsif params[:origen].include? 'r'
-		respuestaID = params[:origen].split('r').last
-	end
 	#Esta parte ingresa el nuevo mensaje
-	my.exec("insert into Mensajes(ConversacionID, Mensaje, Tipo_Declaracion, MensajeAnterior, BasadoRespuesta) VALUES ('#{params[:cid]}', '#{params[:declaracion]}', '#{params[:tipo]}', '#{mensajeID}', '#{respuestaID}');")
-
-	my.exec("update Mensajes set MensajeAnterior = NULL, BasadoRespuesta = NULL Where MensajeAnterior=0 AND BasadoRespuesta=0;")
+	my.exec("insert into Mensajes(ConversacionID, Mensaje, Tipo_Declaracion) VALUES ('#{params[:cid]}', '#{params[:declaracion]}', '#{params[:tipo]}');")
+	
+	#Esta parte valida si el mensaje es basado en respuesta o continuación de mensaje anterior
+	mID = ""	
 	res = my.exec("select ID from Mensajes WHERE Mensaje = '#{params[:declaracion]}' AND Tipo_Declaracion = '#{params[:tipo]}' AND ConversacionID = '#{params[:cid]}'")
 	#Esta parte ingresa las potenciales respuestas de un mensaje
 	if params[:tipo] == "FREE"
 		res.each do |row|
+			mID = row['id'];
 			my.exec("insert into Respuestas(MensajeID, Texto) VALUES "+
 				"('#{row['id']}', '#{params[:respuestas]}');")
 		end
 	
 	elsif
 		res.each do |row|
+			mID = row['id'];
 			params[:respuestas].split("\n").each do |respuesta|
 			my.exec("insert into Respuestas(MensajeID, Texto) VALUES "+
 			"('#{row['id']}', '#{respuesta}');")
 			end	
+		end
+	end
+	if params[:origen] != nil 
+	params[:origen].each do |o|	
+			if o.include? 'm'
+				mensajeID = o.split('m').last
+				my.exec("insert into OrigenesDeMensajes(MensajeOrigenID, ConversacionID, MensajeID) VALUES('#{mensajeID}', '#{params[:cid]}', '#{mID}')")
+			elsif o.include? 'r'
+				respuestaID = o.split('r').last
+				my.exec("insert into OrigenesDeRespuestas(RespuestaOrigenID, ConversacionID, MensajeID) VALUES('#{respuestaID}', '#{params[:cid]}', '#{mID}')")
+			end
 		end
 	end
 	#Esta parte genera la presentación
@@ -84,21 +92,21 @@ post '/responder' do
 	texto = params[:texto]
 	tipo = params[:tipo]
 	if tipo == "abcd" || tipo=="FREE"
-		my.exec("insert into RespuestasHistorial(RespuestaID, Texto) VALUES ('#{respuestaid}', '#{texto}')")	
+		my.exec("insert into RespuestasHistorial(RespuestaID, Texto, MensajeID) VALUES ('#{respuestaid}', '#{texto}', '#{params[:mensajeid]}')")	
 	elsif tipo == "MS" 
 		fila = 0
 		respuestaid.each do |r|
-			my.exec("insert into RespuestasHistorial(RespuestaID, Texto) VALUES ('#{r}', '#{texto[fila]}')")
+			my.exec("insert into RespuestasHistorial(RespuestaID, Texto, MensajeID) VALUES ('#{r}', '#{texto[fila]}', '#{params[:mensajeid]}')")
 			fila+=1
 		end
 	end
 	if tipo != "MS"
-	men = my.exec("select * from Mensajes where BasadoRespuesta = '#{respuestaid}';")
+	men = my.exec("select m.ID as id, m.Mensaje as mensaje, m.Tipo_declaracion as tipo_declaracion from Mensajes m, OrigenesDeRespuestas odr where odr.RespuestaOrigenID = '#{respuestaid}' AND m.ID = odr.MensajeID;")
 		if men.ntuples == 0
-			men = my.exec("select * from Mensajes where MensajeAnterior = '#{params[:mensajeid]}';")
+			men = my.exec("select m.ID as id, m.Mensaje as mensaje, m.Tipo_declaracion as tipo_declaracion from Mensajes m, OrigenesDeMensajes odm where odm.MensajeOrigenID = '#{params[:mensajeid]}' AND m.ID = odm.MensajeID;")
 		end
 	else
-		men = my.exec("select * from Mensajes where MensajeAnterior = '#{params[:mensajeid]}';")
+		men = my.exec("select m.ID as id, m.Mensaje as mensaje, m.Tipo_declaracion as tipo_declaracion from Mensajes m, OrigenesDeMensajes odm where odm.MensajeOrigenID = '#{params[:mensajeid]}' AND m.ID = odm.MensajeID;")
 	end
 	mensajeid = ""
 	mensaje = ""	

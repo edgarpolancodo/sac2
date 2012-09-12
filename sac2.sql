@@ -1,101 +1,72 @@
--- MySQL dump 10.13  Distrib 5.1.41, for debian-linux-gnu (i486)
---
--- Host: localhost    Database: sac2
--- ------------------------------------------------------
--- Server version	5.1.41-3ubuntu12.8
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO,POSTGRESQL' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Table structure for table Mensajes
---
-CREATE SEQUENCE men_id_seq;
+--DROP SEQUENCE IF EXISTS men_id_seq CASCADE;
 DROP TABLE IF EXISTS Mensajes;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE Mensajes (
   ID int DEFAULT NEXTVAL('men_id_seq'),
   ConversacionID int DEFAULT NULL,
   Mensaje varchar(60) DEFAULT NULL,
   Tipo_Declaracion varchar(4) DEFAULT NULL,
-  MensajeAnterior int DEFAULT NULL,
-  BasadoRespuesta int DEFAULT NULL,
-  PRIMARY KEY (ID),
-  UNIQUE (MensajeAnterior,BasadoRespuesta)
+  PRIMARY KEY (ID)
 );
-/*!40101 SET character_set_client = @saved_cs_client */;
+--CREATE SEQUENCE men_id_seq;
 
---
--- Dumping data for table Mensajes
---
-
-
---
--- Table structure for table Respuestas
---
-CREATE SEQUENCE resp_id_seq;
+--DROP SEQUENCE IF EXISTS resp_id_seq CASCADE;
 DROP TABLE IF EXISTS Respuestas;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE Respuestas (
   ID int DEFAULT NEXTVAL('resp_id_seq'),
   MensajeID int DEFAULT NULL,
   Texto varchar(60) DEFAULT NULL,
   PRIMARY KEY (ID)
 );
-/*!40101 SET character_set_client = @saved_cs_client */;
+--CREATE SEQUENCE resp_id_seq;
 
---
--- Dumping data for table Respuestas
---
-
-
---
--- Table structure for table RespuestasHistorial
---
-CREATE SEQUENCE resph_id_seq;
+--DROP SEQUENCE IF EXISTS resph_id_seq CASCADE;
 DROP TABLE IF EXISTS RespuestasHistorial;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE RespuestasHistorial (
   ID int DEFAULT NEXTVAL('resph_id_seq'),
   RespuestaID int DEFAULT NULL,
   Texto varchar(80) DEFAULT NULL,
+  MensajeID int DEFAULT NULL,
   PRIMARY KEY (ID)
 );
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table RespuestasHistorial
---
+--CREATE SEQUENCE resph_id_seq;
 
 
---
--- Table structure for table conversacion
---
-CREATE SEQUENCE con_id_seq;
+--DROP SEQUENCE IF EXISTS origenresp_id_seq CASCADE;
+DROP TABLE IF EXISTS OrigenesDeRespuestas;
+CREATE TABLE OrigenesDeRespuestas (
+  ID int DEFAULT NEXTVAL('origenresp_id_seq'),
+  RespuestaOrigenID int DEFAULT NULL,
+  ConversacionID int DEFAULT NULL,
+  MensajeID int DEFAULT NULL,
+  PRIMARY KEY (ID),
+  UNIQUE (RespuestaOrigenID)
+);
+--CREATE SEQUENCE origenresp_id_seq;
+
+
+--DROP SEQUENCE IF EXISTS origenmens_id_seq CASCADE;
+DROP TABLE IF EXISTS OrigenesDeMensajes;
+CREATE TABLE OrigenesDeMensajes (
+  ID int DEFAULT NEXTVAL('origenmens_id_seq'),
+  MensajeOrigenID int DEFAULT NULL,
+  ConversacionID int DEFAULT NULL,
+  MensajeID int DEFAULT NULL,
+  PRIMARY KEY (ID),
+  UNIQUE (MensajeOrigenID)
+);
+--CREATE SEQUENCE origenmens_id_seq;
+
+
+--DROP SEQUENCE IF EXISTS con_id_seq CASCADE;
 DROP TABLE IF EXISTS conversacion;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE conversacion (
   ID int DEFAULT NEXTVAL('con_id_seq'),
+  Clave varchar(10) DEFAULT NULL,
+  FechaCreacion timestamp DEFAULT current_timestamp,
+  FechaModificacion timestamp DEFAULT NULL,
   PRIMARY KEY (ID)
 );
-/*!40101 SET character_set_client = @saved_cs_client */;
+--CREATE SEQUENCE con_id_seq;
+INSERT INTO conversacion(ID) VALUES('1');
 
---
--- Dumping data for table conversacion
---
-
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2012-07-09 12:11:17
