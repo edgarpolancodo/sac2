@@ -21,7 +21,7 @@ xmlhttp.onreadystatechange=function(){
 }
 function cargarConversaciones(){
 	if(typeof(Storage)!==""){
-		if(localStorage.conversaciones != "undefined"){
+		if(localStorage.conversaciones != undefined){
 			xmlhttp.open("POST","/conversaciones",true);
 			xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 			xmlhttp.send("conversaciones="+localStorage.conversaciones);
