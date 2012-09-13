@@ -1,15 +1,34 @@
 require 'sinatra'
-require 'mysql'
 require 'pg'
 
+#Funcion de pagina indice
+get '/' do
+	erb :index
+end
 #Función que crea nueva conversación
-get '/crear/nuevo' do
+post '/crear/nuevo' do
 	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
-	my.exec("insert into conversacion(ID) VALUES((select ID from conversacion ORDER BY ID DESC LIMIT 1)+1);")
+	if params[:_clave] != "true"	
+		my.exec("insert into conversacion(ID) VALUES((select ID from conversacion ORDER BY ID DESC LIMIT 1)+1);")
+	else
+		my.exec("insert into conversacion(ID, Clave) VALUES((select ID from conversacion ORDER BY ID DESC LIMIT 1)+1, #{params[:clave]});")
+	end
 	res = my.exec("select * from conversacion ORDER BY ID DESC LIMIT 1;")
 	res.each do |r|
 		redirect "/crear/#{r['id']}"	
 	end
+end
+
+post '/conversaciones' do
+
+	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
+	cadena = "select * from conversacion WHERE "
+	params[:conversaciones].split(',').each do |c|
+		cadena += "ID='#{c}' or "	
+	end
+	res = my.exec(cadena[0..(cadena.length-4)])
+	erb :conver, :locals => {:conversaciones => res}
+
 end
 
 #Función que crea la presentación de la conversación a trabajarse
@@ -19,7 +38,7 @@ get '/crear/:cid' do
 	res = my.exec("select * from Mensajes WHERE ConversacionID = '#{params[:cid]}'")
 	res2 = my.exec("select r.ID as id, r.MensajeID as mensajeid, r.Texto as texto from Respuestas r, Mensajes m WHERE ConversacionID = '#{params[:cid]}' AND r.MensajeID = m.ID AND m.Tipo_Declaracion = 'abcd';")
 	link = request.url.sub("crear", "responder")	
-	erb :index, :locals => {:mensajes => res, :respuestas => res2, :cid => params[:cid], :link => link}
+	erb :construir, :locals => {:mensajes => res, :respuestas => res2, :cid => params[:cid], :link => link}
 	
 end
 
@@ -66,7 +85,7 @@ post '/crear/:cid' do
 	#Esta parte genera la presentación
 	res = my.exec("select * from Mensajes WHERE ConversacionID = '#{params[:cid]}'")
 	res2 = my.exec("select r.ID as id, r.MensajeID as mensajeid, r.Texto as texto from Respuestas r, Mensajes m WHERE ConversacionID = '#{params[:cid]}' AND r.MensajeID = m.ID AND m.Tipo_Declaracion = 'abcd';")
-	erb :index2, :locals => {:mensajes => res, :respuestas => res2, :link => link}
+	erb :construir2, :locals => {:mensajes => res, :respuestas => res2, :link => link}
 	
 end
 #Función que genera la presentación para responder una conversación
@@ -120,6 +139,7 @@ post '/responder' do
 		res = my.exec("select * from Respuestas where MensajeID = '#{mensajeid}';")
 		erb :responder2, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => res, :tipo => tipo}
 	else
+		my.exec("update conversacion set fechamodificacion = current_timestamp where ID=(select ConversacionID from Mensajes Where ID=(select mensajeID from Respuestas Where ID='#{respuestaid}'))")
 		erb :responder2, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => "", :tipo => tipo}	
 	end
 end

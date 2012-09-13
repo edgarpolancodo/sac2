@@ -1,0 +1,13 @@
+<h6>Conversaciones ya trabajadas</h6>
+<table>
+<tr><td>ID</td><td>Fecha de creacion</td><td>Fecha de respondida</td></tr>
+<%
+conversaciones.each do |c|
+%>
+<tr>
+<td><%=c['id']%></a></td><td><a href="/crear/<%=c['id']%>"><%=c['fechacreacion']%></a></td><td><a href="/leer/<%=c['id']%>"><%=c['fechamodificacion']%></a></td>
+</tr>
+<%
+end
+%>
+</table>
