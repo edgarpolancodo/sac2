@@ -1,0 +1,14 @@
+<html>
+<head><title>Autenticar conversacion</title>
+<link rel="stylesheet" type="text/css" href="../../../bootstrap/css/bootstrap.css" />
+</head>
+<body>
+<div>
+<p>La conversacion esta protegida. Favor digitar clave para autenticarse.</p>
+<form action="/autenticar/<%=conversacion%>/<%=modo%>" name="clave" method="post">
+<p>Clave: <input type="password" name="clave" maxlength="4" size="4" style="width: 50px"/></p>
+<input type="submit" value="Acceder" class="btn btn-primary"/>
+</form>
+</div>
+</body>
+</html>

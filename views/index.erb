@@ -36,12 +36,17 @@ function cargarConversaciones(){
 <div class="navbar">
  <div class="navbar-inner">
 <label class="brand">Sistema asistente de conversaciones</label>
+<ul class="nav">
+<li class="active"><a>Inicio</a></li>
+<li class=""><a>Como usar</a></li>
+<li class=""><a>Contacto</a></li>
+</ul>
 </div>
 </div>
 <div>
 <form action="/crear/nuevo" name="conversacion" method="post">
 <p>Para crear una nueva conversacion presione el siguiente boton</p>
-<input type="submit" value="Crear conversacion" />
+<input type="submit" value="Crear conversacion" class="btn btn-primary"/>
 <p>¿Desea proteger la conversacion con una clave? <input type="checkbox" value="true" name="_clave" onchange="_conClave(this)"/></p>
 <input type="password" name="clave" disabled="true" maxlength="4" size="4" style="width: 50px"/> 
 </form>

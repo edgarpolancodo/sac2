@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'pg'
 
+use Rack::Session::Pool
 #Funcion de pagina indice
 get '/' do
 	erb :index
@@ -19,6 +20,24 @@ post '/crear/nuevo' do
 	end
 end
 
+get '/autenticar/:cid/:modo' do
+	erb :clave, :locals => {:conversacion => params[:cid], :modo => params[:modo]}
+end
+
+post '/autenticar/:cid/:modo' do
+
+	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
+	res = my.exec("select * from conversacion WHERE ID = '#{params[:cid]}' AND clave='#{params[:clave]}'")
+	if res.ntuples == 1
+		session[:modo] = params[:modo]
+		session[:cid] = params[:cid]
+		redirect "/#{params[:modo]}/#{params[:cid]}"
+	else
+		erb :clave, :locals => {:conversacion => params[:cid], :modo => params[:modo]}	
+	end
+	
+end
+
 post '/conversaciones' do
 
 	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
@@ -35,73 +54,83 @@ end
 get '/crear/:cid' do
 	
 	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
-	res = my.exec("select * from Mensajes WHERE ConversacionID = '#{params[:cid]}'")
-	res2 = my.exec("select r.ID as id, r.MensajeID as mensajeid, r.Texto as texto from Respuestas r, Mensajes m WHERE ConversacionID = '#{params[:cid]}' AND r.MensajeID = m.ID AND m.Tipo_Declaracion = 'abcd';")
-	link = request.url.sub("crear", "responder")	
-	erb :construir, :locals => {:mensajes => res, :respuestas => res2, :cid => params[:cid], :link => link}
-	
+	if my.exec("select * from conversacion where ID='#{params[:cid]}' and clave IS NULL").ntuples == 1 or (my.exec("select * from conversacion where ID='#{params[:cid]}' and clave <>''").ntuples > 0 and session[:modo] == "crear" and session[:cid] == params[:cid])
+		res = my.exec("select * from Mensajes WHERE ConversacionID = '#{params[:cid]}'")
+		res2 = my.exec("select r.ID as id, r.MensajeID as mensajeid, r.Texto as texto from Respuestas r, Mensajes m WHERE ConversacionID = '#{params[:cid]}' AND r.MensajeID = m.ID AND m.Tipo_Declaracion = 'abcd';")
+		link = request.url.sub("crear", "responder")	
+		erb :construir, :locals => {:mensajes => res, :respuestas => res2, :cid => params[:cid], :link => link}
+	else
+		redirect "/autenticar/#{params[:cid]}/crear"	
+	end
 end
 
 #Función que toma los mensajes y respectivas respuesta de una conversación
 post '/crear/:cid' do
-	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
-	link = request.url.sub("crear", "responder")
-	mensajeID = "0"
-	respuestaID = "0"
-	#Esta parte ingresa el nuevo mensaje
-	my.exec("insert into Mensajes(ConversacionID, Mensaje, Tipo_Declaracion) VALUES ('#{params[:cid]}', '#{params[:declaracion]}', '#{params[:tipo]}');")
+	if my.exec("select * from conversacion where ID='#{params[:cid]}' and clave IS NULL").ntuples == 1 or (my.exec("select * from conversacion where ID='#{params[:cid]}' and clave <>''").ntuples > 0 and session[:modo] == "crear" and session[:cid] == params[:cid])
+		my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
+		link = request.url.sub("crear", "responder")
+		mensajeID = "0"
+		respuestaID = "0"
+		#Esta parte ingresa el nuevo mensaje
+		my.exec("insert into Mensajes(ConversacionID, Mensaje, Tipo_Declaracion) VALUES ('#{params[:cid]}', '#{params[:declaracion]}', '#{params[:tipo]}');")
 	
-	#Esta parte valida si el mensaje es basado en respuesta o continuación de mensaje anterior
-	mID = ""	
-	res = my.exec("select ID from Mensajes WHERE Mensaje = '#{params[:declaracion]}' AND Tipo_Declaracion = '#{params[:tipo]}' AND ConversacionID = '#{params[:cid]}'")
-	#Esta parte ingresa las potenciales respuestas de un mensaje
-	if params[:tipo] == "FREE"
-		res.each do |row|
-			mID = row['id'];
-			my.exec("insert into Respuestas(MensajeID, Texto) VALUES "+
-				"('#{row['id']}', '#{params[:respuestas]}');")
-		end
+		#Esta parte valida si el mensaje es basado en respuesta o continuación de mensaje anterior
+		mID = ""	
+		res = my.exec("select ID from Mensajes WHERE Mensaje = '#{params[:declaracion]}' AND Tipo_Declaracion = '#{params[:tipo]}' AND ConversacionID = '#{params[:cid]}'")
+		#Esta parte ingresa las potenciales respuestas de un mensaje
+		if params[:tipo] == "FREE"
+			res.each do |row|
+				mID = row['id'];
+				my.exec("insert into Respuestas(MensajeID, Texto) VALUES "+
+					"('#{row['id']}', '#{params[:respuestas]}');")
+			end
 	
-	elsif
-		res.each do |row|
-			mID = row['id'];
-			params[:respuestas].split("\n").each do |respuesta|
-			my.exec("insert into Respuestas(MensajeID, Texto) VALUES "+
-			"('#{row['id']}', '#{respuesta}');")
-			end	
-		end
-	end
-	if params[:origen] != nil 
-	params[:origen].each do |o|	
-			if o.include? 'm'
-				mensajeID = o.split('m').last
-				my.exec("insert into OrigenesDeMensajes(MensajeOrigenID, ConversacionID, MensajeID) VALUES('#{mensajeID}', '#{params[:cid]}', '#{mID}')")
-			elsif o.include? 'r'
-				respuestaID = o.split('r').last
-				my.exec("insert into OrigenesDeRespuestas(RespuestaOrigenID, ConversacionID, MensajeID) VALUES('#{respuestaID}', '#{params[:cid]}', '#{mID}')")
+		elsif
+			res.each do |row|
+				mID = row['id'];
+				params[:respuestas].split("\n").each do |respuesta|
+				my.exec("insert into Respuestas(MensajeID, Texto) VALUES "+
+				"('#{row['id']}', '#{respuesta}');")
+				end	
 			end
 		end
+		if params[:origen] != nil 
+		params[:origen].each do |o|	
+				if o.include? 'm'
+					mensajeID = o.split('m').last
+					my.exec("insert into OrigenesDeMensajes(MensajeOrigenID, ConversacionID, MensajeID) VALUES('#{mensajeID}', '#{params[:cid]}', '#{mID}')")
+				elsif o.include? 'r'
+					respuestaID = o.split('r').last
+					my.exec("insert into OrigenesDeRespuestas(RespuestaOrigenID, ConversacionID, MensajeID) VALUES('#{respuestaID}', '#{params[:cid]}', '#{mID}')")
+				end
+			end
+		end
+		#Esta parte genera la presentación
+		res = my.exec("select * from Mensajes WHERE ConversacionID = '#{params[:cid]}'")
+		res2 = my.exec("select r.ID as id, r.MensajeID as mensajeid, r.Texto as texto from Respuestas r, Mensajes m WHERE ConversacionID = '#{params[:cid]}' AND r.MensajeID = m.ID AND m.Tipo_Declaracion = 'abcd';")
+		erb :construir2, :locals => {:mensajes => res, :respuestas => res2, :link => link}
+	else
+		redirect "/autenticar/#{params[:cid]}/crear"	
 	end
-	#Esta parte genera la presentación
-	res = my.exec("select * from Mensajes WHERE ConversacionID = '#{params[:cid]}'")
-	res2 = my.exec("select r.ID as id, r.MensajeID as mensajeid, r.Texto as texto from Respuestas r, Mensajes m WHERE ConversacionID = '#{params[:cid]}' AND r.MensajeID = m.ID AND m.Tipo_Declaracion = 'abcd';")
-	erb :construir2, :locals => {:mensajes => res, :respuestas => res2, :link => link}
-	
 end
 #Función que genera la presentación para responder una conversación
 get '/responder/:cid' do
-	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
-	men = my.exec("select * from Mensajes where ConversacionID = '#{params[:cid]}' ORDER BY ID ASC LIMIT 1;")
-	mensajeid = ""
-	mensaje = ""
-	tipo = ""	
-	men.each do |m|
-		mensaje = m['mensaje']
-		mensajeid = m['id']
-		tipo = m['tipo_declaracion']	
+	if my.exec("select * from conversacion where ID='#{params[:cid]}' and clave IS NULL").ntuples == 1 or (my.exec("select * from conversacion where ID='#{params[:cid]}' and clave <>''").ntuples > 0 and session[:modo] == "responder" and session[:cid] == params[:cid])
+		my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
+		men = my.exec("select * from Mensajes where ConversacionID = '#{params[:cid]}' ORDER BY ID ASC LIMIT 1;")
+		mensajeid = ""
+		mensaje = ""
+		tipo = ""	
+		men.each do |m|
+			mensaje = m['mensaje']
+			mensajeid = m['id']
+			tipo = m['tipo_declaracion']	
+		end
+		res = my.exec("select * from Respuestas where MensajeID = '#{mensajeid}';")
+		erb :responder, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => res, :tipo => tipo}
+	else
+		redirect "/autenticar/#{params[:cid]}/responder"		
 	end
-	res = my.exec("select * from Respuestas where MensajeID = '#{mensajeid}';")
-	erb :responder, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => res, :tipo => tipo}
 end
 
 #Esta función toma las respuestas y luego muestra el siguiente mensaje
@@ -146,8 +175,12 @@ end
 
 #Esta función muestra en lectura la conversación ya respondida
 get '/leer/:cid' do
-	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
-	con = my.exec("select m.Mensaje as mensaje, r.Texto as texto, rh.Texto as rh_texto from Mensajes m, Respuestas r, RespuestasHistorial rh where m.ConversacionID = '#{params[:cid]}' and r.MensajeID = m.ID and rh.RespuestaID = r.ID ORDER BY m.ID ASC;")
-	erb :conversacion, :locals => {:conversacion => con}	
+	if my.exec("select * from conversacion where ID='#{params[:cid]}' and clave IS NULL").ntuples == 1 or (my.exec("select * from conversacion where ID='#{params[:cid]}' and clave <>''").ntuples > 0 and session[:modo] == "leer" and session[:cid] == params[:cid])
+		my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
+		con = my.exec("select m.Mensaje as mensaje, r.Texto as texto, rh.Texto as rh_texto from Mensajes m, Respuestas r, RespuestasHistorial rh where m.ConversacionID = '#{params[:cid]}' and r.MensajeID = m.ID and rh.RespuestaID = r.ID ORDER BY m.ID ASC;")
+		erb :conversacion, :locals => {:conversacion => con}	
+	else
+		redirect "/autenticar/#{params[:cid]}/leer"
+	end
 end
 
