@@ -66,8 +66,8 @@ end
 
 #Función que toma los mensajes y respectivas respuesta de una conversación
 post '/crear/:cid' do
+	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
 	if my.exec("select * from conversacion where ID='#{params[:cid]}' and clave IS NULL").ntuples == 1 or (my.exec("select * from conversacion where ID='#{params[:cid]}' and clave <>''").ntuples > 0 and session[:modo] == "crear" and session[:cid] == params[:cid])
-		my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
 		link = request.url.sub("crear", "responder")
 		mensajeID = "0"
 		respuestaID = "0"
@@ -115,8 +115,8 @@ post '/crear/:cid' do
 end
 #Función que genera la presentación para responder una conversación
 get '/responder/:cid' do
+	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
 	if my.exec("select * from conversacion where ID='#{params[:cid]}' and clave IS NULL").ntuples == 1 or (my.exec("select * from conversacion where ID='#{params[:cid]}' and clave <>''").ntuples > 0 and session[:modo] == "responder" and session[:cid] == params[:cid])
-		my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
 		men = my.exec("select * from Mensajes where ConversacionID = '#{params[:cid]}' ORDER BY ID ASC LIMIT 1;")
 		mensajeid = ""
 		mensaje = ""
@@ -175,8 +175,8 @@ end
 
 #Esta función muestra en lectura la conversación ya respondida
 get '/leer/:cid' do
+	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")	
 	if my.exec("select * from conversacion where ID='#{params[:cid]}' and clave IS NULL").ntuples == 1 or (my.exec("select * from conversacion where ID='#{params[:cid]}' and clave <>''").ntuples > 0 and session[:modo] == "leer" and session[:cid] == params[:cid])
-		my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
 		con = my.exec("select m.Mensaje as mensaje, r.Texto as texto, rh.Texto as rh_texto from Mensajes m, Respuestas r, RespuestasHistorial rh where m.ConversacionID = '#{params[:cid]}' and r.MensajeID = m.ID and rh.RespuestaID = r.ID ORDER BY m.ID ASC;")
 		erb :conversacion, :locals => {:conversacion => con}	
 	else
