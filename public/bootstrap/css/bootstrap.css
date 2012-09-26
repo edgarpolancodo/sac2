@@ -224,7 +224,7 @@ a:hover {
 .navbar-static-top .container,
 .navbar-fixed-top .container,
 .navbar-fixed-bottom .container {
-  width: 940px;
+  width: 85%;
 }
 
 .span12 {
@@ -563,8 +563,8 @@ a:hover {
 }
 
 .container-fluid {
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-right: 10px;
+  padding-left: 10px;
   *zoom: 1;
 }
 
@@ -4345,7 +4345,7 @@ input[type="submit"].btn.btn-mini {
 .navbar-static-top .container,
 .navbar-fixed-top .container,
 .navbar-fixed-bottom .container {
-  width: 940px;
+  width: 85%;
 }
 
 .navbar-fixed-top {
@@ -5726,7 +5726,7 @@ a.badge:hover {
 }
 
 .hero-unit {
-  padding: 60px;
+  padding: 30px;
   margin-bottom: 30px;
   background-color: #eeeeee;
   -webkit-border-radius: 6px;
@@ -5736,16 +5736,16 @@ a.badge:hover {
 
 .hero-unit h1 {
   margin-bottom: 0;
-  font-size: 60px;
+  font-size: 30px;
   line-height: 1;
   letter-spacing: -1px;
   color: inherit;
 }
 
 .hero-unit p {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 200;
-  line-height: 30px;
+  line-height: 18px;
   color: inherit;
 }
 

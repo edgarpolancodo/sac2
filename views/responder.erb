@@ -81,12 +81,11 @@ var activo = false;
  <div class="navbar-inner">
 <label class="brand">Sistema asistente de conversaciones</label>
  <ul class="nav">
-<li class="active"><a>Respondiendo Conversación</a></li>
-<li class=""><a>Inicio</a></li>
-<li class=""><a>Como usar</a></li>
-<li class=""><a>Contacto</a></li>
+<li class="active"><a>Respondiendo Conversacion <%=cid%></a></li>
+<li class=""><a href="../../">Inicio</a></li>
 </div>
 </div>
+<div class="container">
 <div id="conversacion" style="background-color: #ECECEC;">
 
 <p><label id='emisor'><%=mensaje%></label></p>
@@ -122,10 +121,11 @@ end
 </div>
 </label>
 <br />
-<textarea name="texto" disabled="true"></textarea>
+<textarea name="texto" disabled="true" placeholder="Escriba respuesta personalizada..."></textarea>
 <input type="submit" value="Continuar" class="btn btn-mini" id="Continuar" disabled="true"/>
 </form>
 <hr />
 <p>Hecho por Edgar Polanco <a href="http://twitter.com/theboss_edgar">Twitter </a><a href="http://github.com/thebossedgar/sac2">GitHub </a><a href="mailto:theboss.edgar14@gmail.com">E-mail</a></p>
+</div>
 </body>
 </html>

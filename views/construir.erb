@@ -69,9 +69,7 @@ function agregarConversacion(){
 <label class="brand">Sistema asistente de conversaciones</label>
  <ul class="nav">
 <li class="active"><a>Conversación - <%=cid%></a></li>
-<li class=""><a>Inicio</a></li>
-<li class=""><a>Como usar</a></li>
-<li class=""><a>Contacto</a></li>
+<li class=""><a href="../../">Inicio</a></li>
 </ul>
 </div>
 </div>
@@ -83,8 +81,8 @@ function agregarConversacion(){
 <div id="span1">Tipo de respuestas: </div><div id="span2"><select name="tipo" onfocus="ayudante('2')"><option value="abcd">a, b, c o d</option><option value="FREE">Respuesta libre</option><option value="MS">Seleccion Multiple</option></select></div>
 </div>
 <textarea name="respuestas" placeholder="Digitar potenciales respuestas por linea..." cols="50" onfocus="ayudante('3')"></textarea><br/>
+<p>Mensaje basado en las respuestas o mensajes anteriores:</p>
 <select name="origen[]" onfocus="ayudante('4')" multiple>
-<option value="">Basado en mensaje/respuesta</option>
 <%
 mensajes.each do |mensaje|
 %>
@@ -94,7 +92,7 @@ mensajes.each do |mensaje|
 respuestas.each do |respuesta|
 if respuesta['mensajeid'] == mensaje['id']
 %>
-<option value="r<%=respuesta['id']%>">&nbsp;&nbsp;<%=respuesta['texto']%></option>
+<option value="r<%=respuesta['id']%>">&nbsp;&nbsp;&nbsp;<%=respuesta['texto']%></option>
 <%
 end
 end

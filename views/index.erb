@@ -37,13 +37,23 @@ function cargarConversaciones(){
  <div class="navbar-inner">
 <label class="brand">Sistema asistente de conversaciones</label>
 <ul class="nav">
-<li class="active"><a>Inicio</a></li>
-<li class=""><a>Como usar</a></li>
-<li class=""><a>Contacto</a></li>
+<li class="active"><a href="../../">Inicio</a></li>
 </ul>
 </div>
 </div>
 <div>
+<div class="container">
+<div class="hero-unit">
+<h2>Sistema asistente de conversaciones</h2>
+<h4>Problema</h4>
+<p>Para poder chatiar tanto el emisor como el receptor tienen que estar disponibles al mismo tiempo</p>
+<h4>Solucion</h4>
+<p>Un sistema para construir flujos de conversacion para que pueda el receptor pueda responderlas sin que este y el emisor esten disponibles al mismo tiempo.</p>
+<p>
+Probablemente usted no entendio. Es normal, es algo dificil de explicar. Para ver el sistema en funcionamiento:</p><p><a class="btn btn-primary" href="/responder/16">Click Aqui »</a></p>
+</div>
+<div class="row-fluid">
+<div class="span6">
 <form action="/crear/nuevo" name="conversacion" method="post">
 <p>Para crear una nueva conversacion presione el siguiente boton</p>
 <input type="submit" value="Crear conversacion" class="btn btn-primary"/>
@@ -51,10 +61,14 @@ function cargarConversaciones(){
 <input type="password" name="clave" disabled="true" maxlength="4" size="4" style="width: 50px"/> 
 </form>
 </div>
-<div id="conversaciones">
+<div id="conversaciones" class="span6">
 
 </div>
+</div>
 <hr />
+<footer>
 <p>Hecho por Edgar Polanco <a href="http://twitter.com/theboss_edgar">Twitter </a><a href="http://github.com/thebossedgar/sac2">GitHub </a><a href="mailto:theboss.edgar14@gmail.com">E-mail</a></p>
+</footer>
+</div>
 </body>
 </html>
