@@ -22,7 +22,7 @@ function seleccionarRespuesta(e){
 xmlhttp=new XMLHttpRequest();
 function responder(){
 	var texto=document.getElementsByTagName("textarea")[0];
-	xmlhttp.open("POST","/responder",true);
+	xmlhttp.open("POST","/responder/<%=cid%>",true);
 	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	var tipo = document.getElementsByName("tipo")[0];
 	var conversacion=document.getElementById("conversacion");	
@@ -92,7 +92,7 @@ var activo = false;
 <p><label id='emisor'><%=mensaje%></label></p>
 
 </div>
-<form name="respuestas" method="post" action="/responder" onsubmit="return responder()">
+<form name="respuestas" method="post" action="/responder/<%=cid%>" onsubmit="return responder()">
 <label id="contenidoactualizado">
 <input type="hidden" value="<%=mensajeid%>" name="mensajeid"/>
 <input type="hidden" value="<%=tipo%>" name="tipo"/>

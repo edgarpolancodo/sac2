@@ -127,14 +127,14 @@ get '/responder/:cid' do
 			tipo = m['tipo_declaracion']	
 		end
 		res = my.exec("select * from Respuestas where MensajeID = '#{mensajeid}';")
-		erb :responder, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => res, :tipo => tipo}
+		erb :responder, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => res, :tipo => tipo, :cid => params[:cid]}
 	else
 		redirect "/autenticar/#{params[:cid]}/responder"		
 	end
 end
 
 #Esta función toma las respuestas y luego muestra el siguiente mensaje
-post '/responder' do
+post '/responder/:cid' do
 	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
 	respuestaid = params[:respuesta]
 	texto = params[:texto]
@@ -168,7 +168,7 @@ post '/responder' do
 		res = my.exec("select * from Respuestas where MensajeID = '#{mensajeid}';")
 		erb :responder2, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => res, :tipo => tipo}
 	else
-		my.exec("update conversacion set fechamodificacion = current_timestamp where ID=(select ConversacionID from Mensajes Where ID=(select mensajeID from Respuestas Where ID='#{respuestaid}'))")
+		my.exec("update conversacion set fechamodificacion = current_timestamp where ID='#{params[:cid]}'")
 		erb :responder2, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => "", :tipo => tipo}	
 	end
 end
