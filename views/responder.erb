@@ -26,8 +26,9 @@ function responder(){
 	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	var tipo = document.getElementsByName("tipo")[0];
 	var conversacion=document.getElementById("conversacion");	
+	var conversacionhistorial = document.getElementsByName("conversacionhistorial")[0];
 	if(tipo.value != "MS"){
-		xmlhttp.send("texto="+texto.value+"&respuesta="+respuestaseleccionada+"&mensajeid="+document.getElementsByName("mensajeid")[0].value+"&tipo="+tipo.value);
+		xmlhttp.send("texto="+texto.value+"&respuesta="+respuestaseleccionada+"&mensajeid="+document.getElementsByName("mensajeid")[0].value+"&tipo="+tipo.value+"&conversacionhistorial="+conversacionhistorial.value);
 		conversacion.innerHTML+="<p><label id='receptor'>"+texto.value+"</label></p>";
 		document.getElementsByTagName("textarea")[0].disabled = true;
 		document.getElementsByTagName("textarea")[0].value = "";
@@ -42,7 +43,7 @@ function responder(){
 			cadena2+=document.getElementById(cajas[i].value).innerHTML+" ";
 			}
 		}
-		xmlhttp.send(cadena+"mensajeid="+document.getElementsByName("mensajeid")[0].value+"&tipo="+tipo.value);
+		xmlhttp.send(cadena+"mensajeid="+document.getElementsByName("mensajeid")[0].value+"&tipo="+tipo.value+"&conversacionhistorial="+conversacionhistorial.value);
 		conversacion.innerHTML+=cadena2+"</label></p>";
 		
 	}
@@ -95,6 +96,7 @@ var activo = false;
 <label id="contenidoactualizado">
 <input type="hidden" value="<%=mensajeid%>" name="mensajeid"/>
 <input type="hidden" value="<%=tipo%>" name="tipo"/>
+<input type="hidden" value="" name="conversacionhistorial"/>
 <%
 if respuestas != ""
 %>

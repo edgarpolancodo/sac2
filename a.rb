@@ -41,9 +41,9 @@ end
 post '/conversaciones' do
 
 	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")
-	cadena = "select * from conversacion WHERE "
+	cadena = "select ch.fechamodificacion as fechamodificacion, c.fechacreacion as fechacreacion, c.ID as id from conversacioneshistorial ch, conversacion c WHERE ch.ConversacionID = c.ID AND "
 	params[:conversaciones].split(',').each do |c|
-		cadena += "ID='#{c}' or "	
+		cadena += "ch.ConversacionID='#{c}' or "	
 	end
 	res = my.exec(cadena[0..(cadena.length-4)])
 	erb :conver, :locals => {:conversaciones => res}
@@ -139,12 +139,22 @@ post '/responder/:cid' do
 	respuestaid = params[:respuesta]
 	texto = params[:texto]
 	tipo = params[:tipo]
+	conversacionhistorial = ""
+	if params[:conversacionhistorial] == ""
+		my.exec("insert into ConversacionesHistorial(ConversacionID, FechaModificacion, Finalizado_) VALUES ('#{params[:cid]}', current_timestamp, '0')")
+		res = my.exec("select ID from ConversacionesHistorial ORDER BY ID DESC LIMIT 1;")
+		res.each do |r|
+			conversacionhistorial = r['id']	
+		end 
+	else
+		conversacionhistorial = params[:conversacionhistorial]
+	end 
 	if tipo == "abcd" || tipo=="FREE"
-		my.exec("insert into RespuestasHistorial(RespuestaID, Texto, MensajeID) VALUES ('#{respuestaid}', '#{texto}', '#{params[:mensajeid]}')")	
+		my.exec("insert into RespuestasHistorial(RespuestaID, Texto, MensajeID, ConversacionesHistorialID) VALUES ('#{respuestaid}', '#{texto}', '#{params[:mensajeid]}', '#{conversacionhistorial}')")	
 	elsif tipo == "MS" 
 		fila = 0
 		respuestaid.each do |r|
-			my.exec("insert into RespuestasHistorial(RespuestaID, Texto, MensajeID) VALUES ('#{r}', '#{texto[fila]}', '#{params[:mensajeid]}')")
+			my.exec("insert into RespuestasHistorial(RespuestaID, Texto, MensajeID, ConversacionesHistorialID) VALUES ('#{r}', '#{texto[fila]}', '#{params[:mensajeid]}', '#{conversacionhistorial}')")
 			fila+=1
 		end
 	end
@@ -156,6 +166,7 @@ post '/responder/:cid' do
 	else
 		men = my.exec("select m.ID as id, m.Mensaje as mensaje, m.Tipo_declaracion as tipo_declaracion from Mensajes m, OrigenesDeMensajes odm where odm.MensajeOrigenID = '#{params[:mensajeid]}' AND m.ID = odm.MensajeID;")
 	end
+	my.exec("update conversacioneshistorial set fechamodificacion = current_timestamp where ConversacionID='#{conversacionhistorial}'")
 	mensajeid = ""
 	mensaje = ""	
 	tipo = ""
@@ -166,10 +177,10 @@ post '/responder/:cid' do
 	end
 	if mensaje != ""
 		res = my.exec("select * from Respuestas where MensajeID = '#{mensajeid}';")
-		erb :responder2, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => res, :tipo => tipo}
+		erb :responder2, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => res, :tipo => tipo, :conversacionhistorial => conversacionhistorial}
 	else
-		my.exec("update conversacion set fechamodificacion = current_timestamp where ID='#{params[:cid]}'")
-		erb :responder2, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => "", :tipo => tipo}	
+		my.exec("update conversacioneshistorial set finalizado_ = '1' where ID='#{conversacionhistorial}'")
+		erb :responder2, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => "", :tipo => tipo, :conversacionhistorial => ""}	
 	end
 end
 
@@ -177,8 +188,9 @@ end
 get '/leer/:cid' do
 	my = PGconn.open("ec2-107-21-106-52.compute-1.amazonaws.com", 5432, '', '',"d8fc8cbt6ec574", "fqcqofmgyilbwq", "VkrhL6BoGHvdk-e20WEZQYWqyh")	
 	if my.exec("select * from conversacion where ID='#{params[:cid]}' and clave IS NULL").ntuples == 1 or (my.exec("select * from conversacion where ID='#{params[:cid]}' and clave <>''").ntuples > 0 and session[:modo] == "leer" and session[:cid] == params[:cid])
-		con = my.exec("select m.Mensaje as mensaje, r.Texto as texto, rh.Texto as rh_texto from Mensajes m, Respuestas r, RespuestasHistorial rh where m.ConversacionID = '#{params[:cid]}' and r.MensajeID = m.ID and rh.RespuestaID = r.ID ORDER BY m.ID ASC;")
-		erb :conversacion, :locals => {:conversacion => con}	
+		con = my.exec("select m.Mensaje as mensaje, r.Texto as texto, rh.Texto as rh_texto, rh.conversacioneshistorialid as conversacionhistorialid from Mensajes m, Respuestas r, RespuestasHistorial rh where m.ConversacionID = '#{params[:cid]}' and r.MensajeID = m.ID and rh.RespuestaID = r.ID ORDER BY m.ID ASC;")
+		con2 = my.exec("select * from conversacioneshistorial where ConversacionID='#{params[:cid]}' ORDER BY ID ASC;")
+		erb :conversacion, :locals => {:conversacion => con2, :respuestas => con}	
 	else
 		redirect "/autenticar/#{params[:cid]}/leer"
 	end

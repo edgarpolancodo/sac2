@@ -14,12 +14,26 @@
 </div>
 <%
 conversacion.each do |con|
+if con['finalizado_'] == '1'
 %>
-
-<p><label style="color:#000000"><%=con['mensaje']%></label></p>
-<p><label title="<%=con['texto']%>" style="color:#FF0000"><%=con['rh_texto']%></label></p>
+<hr />
+<p>Conversacion completada - <%=con['fechamodificacion']%></p>
+<%
+else
+%>
+<hr />
+<p>Conversacion modificada - <%=con['fechamodificacion']%></p>
+<%
+end
+respuestas.each do |res|
+if res['conversacionhistorialid'] == con['id']
+%>
+<p><label style="color:#000000"><%=res['mensaje']%></label></p>
+<p><label title="<%=res['texto']%>" style="color:#FF0000"><%=res['rh_texto']%></label></p>
 
 <%
+end
+end
 end
 %>
 </body>
