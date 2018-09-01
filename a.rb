@@ -18,7 +18,7 @@ post '/crear/nuevo' do
 	res.each do |r|
 		redirect "/crear/#{r['id']}"	
 	end
-	my.close()
+	#my.close()
 end
 
 get '/autenticar/:cid/:modo' do
@@ -36,7 +36,7 @@ post '/autenticar/:cid/:modo' do
 	else
 		erb :clave, :locals => {:conversacion => params[:cid], :modo => params[:modo]}	
 	end
-	my.close()
+	#my.close()
 	
 end
 
@@ -49,7 +49,7 @@ post '/conversaciones' do
 	end
 	res = my.exec(cadena[0..(cadena.length-4)])
 	erb :conver, :locals => {:conversaciones => res}
-	my.close()
+	#my.close()
 end
 
 #Función que crea la presentación de la conversación a trabajarse
@@ -64,7 +64,7 @@ get '/crear/:cid' do
 	else
 		redirect "/autenticar/#{params[:cid]}/crear"	
 	end
-	my.close()
+	#my.close()
 end
 
 #Función que toma los mensajes y respectivas respuesta de una conversación
@@ -115,7 +115,7 @@ post '/crear/:cid' do
 	else
 		redirect "/autenticar/#{params[:cid]}/crear"	
 	end
-	my.close()
+	#my.close()
 end
 #Función que genera la presentación para responder una conversación
 get '/responder/:cid' do
@@ -135,7 +135,7 @@ get '/responder/:cid' do
 	else
 		redirect "/autenticar/#{params[:cid]}/responder"		
 	end
-	my.close()
+	#my.close()
 end
 
 #Esta función toma las respuestas y luego muestra el siguiente mensaje
@@ -187,7 +187,7 @@ post '/responder/:cid' do
 		my.exec("update conversacioneshistorial set finalizado_ = '1' where ID='#{conversacionhistorial}'")
 		erb :responder2, :locals => {:mensaje => mensaje, :mensajeid => mensajeid, :respuestas => "", :tipo => tipo, :conversacionhistorial => ""}	
 	end
-	my.close()
+	#my.close()
 end
 
 #Esta función muestra en lectura la conversación ya respondida
@@ -200,6 +200,6 @@ get '/leer/:cid' do
 	else
 		redirect "/autenticar/#{params[:cid]}/leer"
 	end
-	my.close()
+	#my.close()
 end
 
