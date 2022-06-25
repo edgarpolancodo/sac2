@@ -8,7 +8,7 @@ get '/' do
 end
 #Función que crea nueva conversación
 post '/crear/nuevo' do
-	my = PG.open("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
+	my = PG.connect("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
 	if params[:_clave] != "true"	
 		my.exec("insert into conversacion(ID) VALUES((select ID from conversacion ORDER BY ID DESC LIMIT 1)+1);")
 	else
@@ -27,7 +27,7 @@ end
 
 post '/autenticar/:cid/:modo' do
 
-	my = PG.open("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
+	my = PG.connect("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
 	res = my.exec("select * from conversacion WHERE ID = '#{params[:cid]}' AND clave='#{params[:clave]}'")
 	if res.ntuples == 1
 		session[:modo] = params[:modo]
@@ -42,7 +42,7 @@ end
 
 post '/conversaciones' do
 
-	my = PG.open("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
+	my = PG.connect("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
 	cadena = "select ch.fechamodificacion as fechamodificacion, c.fechacreacion as fechacreacion, c.ID as id from conversacioneshistorial ch, conversacion c WHERE ch.ConversacionID = c.ID AND "
 	params[:conversaciones].split(',').each do |c|
 		cadena += "ch.ConversacionID='#{c}' or "	
@@ -55,7 +55,7 @@ end
 #Función que crea la presentación de la conversación a trabajarse
 get '/crear/:cid' do
 	
-	my = PG.open("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
+	my = PG.connect("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
 	if my.exec("select * from conversacion where ID='#{params[:cid]}' and clave IS NULL").ntuples == 1 or (my.exec("select * from conversacion where ID='#{params[:cid]}' and clave <>''").ntuples > 0 and session[:modo] == "crear" and session[:cid] == params[:cid])
 		res = my.exec("select * from Mensajes WHERE ConversacionID = '#{params[:cid]}'")
 		res2 = my.exec("select r.ID as id, r.MensajeID as mensajeid, r.Texto as texto from Respuestas r, Mensajes m WHERE ConversacionID = '#{params[:cid]}' AND r.MensajeID = m.ID AND m.Tipo_Declaracion = 'abcd';")
@@ -69,7 +69,7 @@ end
 
 #Función que toma los mensajes y respectivas respuesta de una conversación
 post '/crear/:cid' do
-	my = PG.open("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
+	my = PG.connect("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
 	if my.exec("select * from conversacion where ID='#{params[:cid]}' and clave IS NULL").ntuples == 1 or (my.exec("select * from conversacion where ID='#{params[:cid]}' and clave <>''").ntuples > 0 and session[:modo] == "crear" and session[:cid] == params[:cid])
 		link = request.url.sub("crear", "responder")
 		mensajeID = "0"
@@ -119,7 +119,7 @@ post '/crear/:cid' do
 end
 #Función que genera la presentación para responder una conversación
 get '/responder/:cid' do
-	my = PG.open("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
+	my = PG.connect("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
 	if my.exec("select * from conversacion where ID='#{params[:cid]}' and clave IS NULL").ntuples == 1 or (my.exec("select * from conversacion where ID='#{params[:cid]}' and clave <>''").ntuples > 0 and session[:modo] == "responder" and session[:cid] == params[:cid])
 		men = my.exec("select * from Mensajes where ConversacionID = '#{params[:cid]}' ORDER BY ID ASC LIMIT 1;")
 		mensajeid = ""
@@ -140,7 +140,7 @@ end
 
 #Esta función toma las respuestas y luego muestra el siguiente mensaje
 post '/responder/:cid' do
-	my = PG.open("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
+	my = PG.connect("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
 	respuestaid = params[:respuesta]
 	texto = params[:texto]
 	tipo = params[:tipo]
@@ -192,7 +192,7 @@ end
 
 #Esta función muestra en lectura la conversación ya respondida
 get '/leer/:cid' do
-	my = PG.open("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
+	my = PG.connect("ec2-54-237-135-3.compute-1.amazonaws.com", 5432, '', '',"d5jok662n1lk9t", "bzsficbssndtuq", "2b3f3a491e3101d2698415d518bd647613886b5b873f2690850ee8b44880d655")
 	if my.exec("select * from conversacion where ID='#{params[:cid]}' and clave IS NULL").ntuples == 1 or (my.exec("select * from conversacion where ID='#{params[:cid]}' and clave <>''").ntuples > 0 and session[:modo] == "leer" and session[:cid] == params[:cid])
 		con = my.exec("select m.Mensaje as mensaje, r.Texto as texto, rh.Texto as rh_texto, rh.conversacioneshistorialid as conversacionhistorialid from Mensajes m, Respuestas r, RespuestasHistorial rh where m.ConversacionID = '#{params[:cid]}' and r.MensajeID = m.ID and rh.RespuestaID = r.ID ORDER BY m.ID ASC;")
 		con2 = my.exec("select * from conversacioneshistorial where ConversacionID='#{params[:cid]}' ORDER BY ID ASC;")
